@@ -427,7 +427,7 @@ export default class DrawerLayout extends Component<PropType, StateType> {
         }],
       };
 
-      if (typeof containerStyles === 'function') {
+      if (typeof contentContainerStyle === 'function') {
         containerStyles = contentContainerStyle({ drawerValue: openValue, drawerPosition: drawerPosition });
       } else {
         containerStyles = {
