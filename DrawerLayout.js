@@ -417,14 +417,24 @@ export default class DrawerLayout extends Component<PropType, StateType> {
 
     let containerStyles;
     if (containerSlide) {
-      const containerTranslateX = openValue.interpolate({
-        inputRange: [0, 1],
-        outputRange: fromLeft ? [0, drawerWidth] : [0, -drawerWidth],
-        extrapolate: 'clamp',
-      });
       containerStyles = {
-        transform: [{ translateX: containerTranslateX }],
+        transform: [{
+          translateX: openValue.interpolate({
+            inputRange: [0, 1],
+            outputRange: fromLeft ? [0, drawerWidth] : [0, -drawerWidth],
+            extrapolate: 'clamp',
+          }),
+        }],
       };
+
+      if (typeof containerStyles === 'function') {
+        containerStyles = contentContainerStyle({ drawerValue: openValue, drawerPosition: drawerPosition });
+      } else {
+        containerStyles = {
+          ...containerStyles,
+          ...contentContainerStyle,
+        }
+      }
     }
 
     let drawerTranslateX = 0;
@@ -449,7 +459,6 @@ export default class DrawerLayout extends Component<PropType, StateType> {
               ? styles.containerOnBack
               : styles.containerInFront,
             containerStyles,
-            contentContainerStyle,
           ]}>
           {typeof this.props.children === 'function'
             ? this.props.children(this._openValue)
